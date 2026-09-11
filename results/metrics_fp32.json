@@ -1,5 +1,6 @@
 {
   "model": "models/yolov8n.onnx",
+  "img_dir": "data/images_eval",
   "overall": {
     "AP@[.5:.95]": 0.41466016546755585,
     "AP@.5": 0.5861720285652778,

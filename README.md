@@ -157,21 +157,61 @@ That finer resolution helped wherever *typical* (non-extreme) activation magnitu
 
 ---
 
+## Reproducing, in order
+
+Data, model weights, and every result file are already committed, so none of this is required just to see the numbers — it's only needed to verify or re-run the pipeline yourself.
+
+```bash
+# 0. Setup
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+```
+
+```bash
+# Task 1 — FP32 baseline, then quantize to INT8
+python3 scripts/select_subset.py
+python3 scripts/download_images.py data/eval_image_ids.txt data/images_eval
+python3 scripts/download_images.py data/calib_image_ids.txt data/images_calib
+python3 scripts/export_onnx.py
+python3 scripts/evaluate.py models/yolov8n.onnx fp32
+python3 scripts/benchmark_latency.py models/yolov8n.onnx fp32
+python3 scripts/quantize.py data/images_calib models/yolov8n_int8.onnx
+python3 scripts/evaluate.py models/yolov8n_int8.onnx int8
+python3 scripts/benchmark_latency.py models/yolov8n_int8.onnx int8
+```
+
+```bash
+# Task 2 — Degrade
+python3 scripts/degrade.py
+for cond in motion_blur low_light jpeg30 downup; do
+  python3 scripts/evaluate.py models/yolov8n.onnx fp32_$cond data/images_eval_$cond
+  python3 scripts/evaluate.py models/yolov8n_int8.onnx int8_$cond data/images_eval_$cond
+done
+```
+
+```bash
+# Task 3 — one targeted intervention
+python3 scripts/blur_calib_images.py
+python3 scripts/quantize.py data/images_calib_motion_blur models/yolov8n_int8_blurcalib.onnx
+python3 scripts/evaluate.py models/yolov8n_int8_blurcalib.onnx int8blurcalib_motion_blur data/images_eval_motion_blur
+python3 scripts/evaluate.py models/yolov8n_int8_blurcalib.onnx int8blurcalib_clean data/images_eval
+python3 scripts/benchmark_latency.py models/yolov8n_int8_blurcalib.onnx int8blurcalib
+```
+
+```bash
+# Charts
+python3 scripts/make_figures.py
+```
+
+`scripts/make_docx_report.py` regenerates `results/summary_report.docx` **from scratch** — don't run it if you want to keep manual edits made in Word; it will overwrite them.
+
 ## Project structure
 
 ```
-scripts/
-  select_subset.py       500 eval + 120 calib images from instances_val2017.json
-  download_images.py     fetches images by file_name from images.cocodataset.org
-  export_onnx.py         yolov8n.pt -> models/yolov8n.onnx (FP32)
-  quantize.py <calib_dir> <out.onnx>   post-training static INT8 quantization
-  degrade.py              builds the 4 degraded image sets
-  evaluate.py <model> <tag> [img_dir]  mAP via pycocotools COCOeval
-  benchmark_latency.py <model> <tag>   single-threaded latency, mean/p95
-  make_figures.py         generates the charts used in this README
-models/                  yolov8n.pt, yolov8n.onnx, yolov8n_int8.onnx, yolov8n_int8_blurcalib.onnx
-data/                    eval/calib image sets + COCO annotation subset
-results/                 metrics_*.json, latency_*.json, figures/, report.md (full write-up)
+scripts/    the pipeline above, one script per step, plus yolo_utils.py (shared pre/post-processing)
+models/     yolov8n.pt, yolov8n.onnx, yolov8n_int8.onnx, yolov8n_int8_blurcalib.onnx
+data/       eval/calib image sets + COCO annotation subset
+results/    metrics_*.json, latency_*.json, figures/, report.md (full write-up), summary_report.docx
 ```
 
 `results/report.md` has the complete methodology and every intermediate number; this README is the summarized, illustrated version.
