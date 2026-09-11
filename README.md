@@ -157,7 +157,9 @@ That finer resolution helped wherever *typical* (non-extreme) activation magnitu
 
 ---
 
-## Workflow of script
+## Workflow of script:
+
+All these scripts can be run automatically in sequential order if you run: run_all.sh
 ```bash
 # 0. Setup
 python3 -m venv venv && source venv/bin/activate
@@ -196,14 +198,3 @@ python3 scripts/benchmark_latency.py models/yolov8n_int8_blurcalib.onnx int8blur
 ```
 
 ```bash
-
-
-## Project structure
-
-```
-scripts/    the pipeline above, one script per step, plus yolo_utils.py (shared pre/post-processing)
-models/     yolov8n.pt, yolov8n.onnx, yolov8n_int8.onnx, yolov8n_int8_blurcalib.onnx
-data/       eval/calib image sets + COCO annotation subset
-results/    metrics_*.json, latency_*.json, figures/, report.md (full write-up), summary_report.docx
-```
-
