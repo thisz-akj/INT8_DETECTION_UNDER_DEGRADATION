@@ -67,7 +67,7 @@ Post-training **static** quantization via ONNX Runtime (`quantize_static`): QDQ 
 
 Per-class AP shows INT8 preserved most of YOLOv8n's detection capability, with losses generally below 0.05 AP. The largest drops were on stop sign and traffic light — classes dominated by small, fine-detail objects that quantization error hits hardest.
 
-| Size | FP32 AP@[.5:.95] | INT8 AP@[.5:.95] | Δ |
+| Size | FP32 AP@[.5:.95] | INT8 AP@[.5:.95] | Difference |
 |---|---|---|---|
 | Small (<32²px) | 0.2045 | 0.1658 | −0.0387 (**−18.9%**) |
 | Medium (32²–96²px) | 0.5978 | 0.5730 | −0.0248 (−4.1%) |
