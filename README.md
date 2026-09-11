@@ -157,10 +157,7 @@ That finer resolution helped wherever *typical* (non-extreme) activation magnitu
 
 ---
 
-## Reproducing, in order
-
-Data, model weights, and every result file are already committed, so none of this is required just to see the numbers — it's only needed to verify or re-run the pipeline yourself.
-
+## Workflow of script
 ```bash
 # 0. Setup
 python3 -m venv venv && source venv/bin/activate
