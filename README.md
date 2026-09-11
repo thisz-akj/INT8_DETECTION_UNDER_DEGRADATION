@@ -214,4 +214,3 @@ data/       eval/calib image sets + COCO annotation subset
 results/    metrics_*.json, latency_*.json, figures/, report.md (full write-up), summary_report.docx
 ```
 
-`results/report.md` has the complete methodology and every intermediate number; this README is the summarized, illustrated version.
