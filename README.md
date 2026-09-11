@@ -196,11 +196,7 @@ python3 scripts/benchmark_latency.py models/yolov8n_int8_blurcalib.onnx int8blur
 ```
 
 ```bash
-# Charts
-python3 scripts/make_figures.py
-```
 
-`scripts/make_docx_report.py` regenerates `results/summary_report.docx` **from scratch** — don't run it if you want to keep manual edits made in Word; it will overwrite them.
 
 ## Project structure
 
