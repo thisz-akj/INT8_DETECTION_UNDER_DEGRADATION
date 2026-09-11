@@ -159,7 +159,7 @@ That finer resolution helped wherever *typical* (non-extreme) activation magnitu
 
 ## Workflow of script:
 
-All these scripts can be run automatically in sequential order if you run: run_all.sh
+All these scripts can be run automatically in sequential order if you run: ./run_all.sh
 ```bash
 # 0. Setup
 python3 -m venv venv && source venv/bin/activate
