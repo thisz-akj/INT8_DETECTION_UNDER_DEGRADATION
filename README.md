@@ -57,6 +57,22 @@ Post-training **static** quantization via ONNX Runtime (`quantize_static`): QDQ 
 
 ![Per-class AP, FP32 vs INT8](results/figures/task2_per_class_ap.png)
 
+| Class | FP32 AP@0.5 | INT8 AP@0.5 | FP32 AP@0.5:0.95 | INT8 AP@0.5:0.95 |
+|---|---|---|---|---|
+| person | 0.7751 | 0.7630 | 0.5291 | 0.5111 |
+| bicycle | 0.4081 | 0.3885 | 0.2446 | 0.2356 |
+| car | 0.5937 | 0.5879 | 0.3797 | 0.3704 |
+| traffic light | 0.4361 | 0.4284 | 0.2326 | 0.2138 |
+| stop sign | 0.7178 | 0.6761 | 0.6872 | 0.6411 |
+
+Per-class AP shows INT8 preserved most of YOLOv8n's detection capability, with losses generally below 0.05 AP. The largest drops were on stop sign and traffic light — classes dominated by small, fine-detail objects that quantization error hits hardest.
+
+| Size | FP32 AP@[.5:.95] | INT8 AP@[.5:.95] | Δ |
+|---|---|---|---|
+| Small (<32²px) | 0.2045 | 0.1658 | −0.0387 (**−18.9%**) |
+| Medium (32²–96²px) | 0.5978 | 0.5730 | −0.0248 (−4.1%) |
+| Large (>96²px) | 0.7186 | 0.7518 | +0.0331 (+4.6%) |
+
 ![AP by object size, FP32 vs INT8](results/figures/task2_ap_by_size.png)
 
 Small-object AP takes the largest relative hit (−18.9%) while large objects are essentially unaffected (+4.6%, within noise) — consistent with the size-mechanism explanation above: 8-bit resolution has the least room to spare exactly where the signal is already thinnest.
