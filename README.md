@@ -47,7 +47,7 @@ Post-training **static** quantization via ONNX Runtime (`quantize_static`): QDQ 
 
 ### Accuracy, latency, size
 
-| Metric | FP32 | INT8 | Δ |
+| Metric | FP32 | INT8 | Difference |
 |---|---|---|---|
 | mAP@0.5 | 0.5862 | 0.5688 | −0.0174 (−3.0%) |
 | mAP@0.5:0.95 | 0.4147 | 0.3944 | −0.0203 (−4.9%) |
